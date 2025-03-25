@@ -1,0 +1,25 @@
+/* Global styles for the application */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .nav-link-desktop {
+    @apply flex items-center px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 
+           rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white
+           transition-colors duration-200;
+  }
+  
+  .nav-link-active {
+    @apply bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-semibold;
+  }
+  
+  .mobile-nav-link {
+    @apply flex items-center px-4 py-3 text-base font-medium rounded-md text-gray-700 dark:text-gray-200
+           hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white;
+  }
+  
+  .mobile-nav-active {
+    @apply bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 font-semibold;
+  }
+}
