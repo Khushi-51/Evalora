@@ -10,7 +10,7 @@ const app = express()
 const server = http.createServer(app)
 const io = socketIO(server, {
   cors: {
-    origin: process.env.CLIENT_URL || "https://evalora-2.onrender.com/",
+    origin: "*", 
     methods: ["GET", "POST"],
   },
 })
