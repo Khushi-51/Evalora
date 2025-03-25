@@ -25,7 +25,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build:css": "tailwindcss -i ./src/index.css -o ./src/styles/output.css --watch"
+    "build:css": "tailwindcss -i ./src/index.css -o ./src/styles/output.css"
   },
   "eslintConfig": {
     "extends": [
@@ -45,7 +45,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:5000",
+  "proxy": "https://evalora-1.onrender.com/",
   "devDependencies": {
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.3",
