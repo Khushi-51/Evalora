@@ -5,6 +5,7 @@ import { useParams, Link } from "react-router-dom"
 import { toast } from "react-toastify"
 import { certificatesAPI } from "../../services/api"
 import Loader from "../../components/common/Loader"
+import "../../styles/globals.css";
 
 const CertificateView = () => {
   const [certificate, setCertificate] = useState(null)

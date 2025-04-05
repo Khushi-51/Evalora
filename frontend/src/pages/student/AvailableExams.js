@@ -6,6 +6,7 @@ import { toast } from "react-toastify"
 import { examsAPI } from "../../services/api"
 import Loader from "../../components/common/Loader"
 import Pagination from "../../components/common/Pagination"
+import "../../styles/globals.css";
 
 const AvailableExams = () => {
   const [exams, setExams] = useState([])

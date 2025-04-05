@@ -7,6 +7,7 @@ import { examsAPI, questionsAPI, submissionsAPI } from "../../services/api"
 import AuthContext from "../../context/AuthContext"
 import Loader from "../../components/common/Loader"
 import Modal from "../../components/common/Modal"
+import "../../styles/globals.css";
 import { joinExam, startExam, syncTime, sendProctoringAlert } from "../../services/socket"
 
 const TakeExam = () => {

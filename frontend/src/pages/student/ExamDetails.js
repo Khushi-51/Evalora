@@ -6,6 +6,7 @@ import { toast } from "react-toastify"
 import { examsAPI, submissionsAPI } from "../../services/api"
 import Loader from "../../components/common/Loader"
 import Modal from "../../components/common/Modal"
+import "../../styles/globals.css";
 
 const ExamDetails = () => {
   const [exam, setExam] = useState(null)

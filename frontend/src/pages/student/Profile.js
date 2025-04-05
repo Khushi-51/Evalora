@@ -109,166 +109,277 @@ const Profile = () => {
     }
   }
 
+  const getInitials = (name) => {
+    return name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+  // Generate random background color based on name
+  const getAvatarBackground = (name) => {
+    const colors = [
+      'bg-blue-500', 'bg-red-500', 'bg-green-500', 
+      'bg-yellow-500', 'bg-purple-500', 'bg-pink-500'
+    ];
+    const index = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return colors[index % colors.length];
+  };
+
   if (loading) {
     return <Loader />
   }
-
   return (
-    <div className="container py-4">
-      <div className="row">
-        <div className="col-md-3">
-          <div className="card mb-4">
-            <div className="card-body text-center">
-              <img
-                src={profileData.profilePicture || "/default-profile.jpg"}
-                alt="Profile"
-                className="rounded-circle img-fluid"
-                style={{ width: "150px", height: "150px", objectFit: "cover" }}
-              />
-              <h5 className="my-3">{user.name}</h5>
-              <p className="text-muted mb-1">{user.role.charAt(0).toUpperCase() + user.role.slice(1)}</p>
-              <p className="text-muted mb-4">{user.institution || "No institution"}</p>
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="flex flex-col lg:flex-row gap-8">
+        {/* Sidebar */}
+        <div className="lg:w-1/4">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-6">
+            <div className="flex flex-col items-center">
+              {profileData.profilePicture ? (
+                <img
+                  src={profileData.profilePicture}
+                  alt={user.name}
+                  className="w-32 h-32 rounded-full object-cover ring-4 ring-gray-100"
+                />
+              ) : (
+                <div className={`w-32 h-32 rounded-full flex items-center justify-center text-2xl font-bold text-white ${getAvatarBackground(user.name)}`}>
+                  {getInitials(user.name)}
+                </div>
+              )}
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mt-4 mb-1">{user.name}</h3>
+              <span className="px-3 py-1 text-sm font-medium bg-blue-100 text-blue-800 rounded-full mb-2">
+                {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+              </span>
+              <p className="text-gray-600 dark:text-gray-400">{user.institution || "No institution"}</p>
             </div>
           </div>
 
-          <div className="card mb-4">
-            <div className="card-body">
-              <ul className="list-group list-group-flush">
-                <li
-                  className={`list-group-item d-flex justify-content-between align-items-center p-3 ${activeTab === "profile" ? "active" : ""}`}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setActiveTab("profile")}
-                >
-                  <span>Profile Information</span>
-                </li>
-                <li
-                  className={`list-group-item d-flex justify-content-between align-items-center p-3 ${activeTab === "password" ? "active" : ""}`}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setActiveTab("password")}
-                >
-                  <span>Change Password</span>
-                </li>
-              </ul>
-            </div>
+          {/* Navigation */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
+            <nav className="divide-y divide-gray-200 dark:divide-gray-700">
+              <button
+                onClick={() => setActiveTab("profile")}
+                className={`w-full px-6 py-4 text-left transition-colors ${
+                  activeTab === "profile"
+                    ? "bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-600"
+                    : "hover:bg-gray-50 dark:hover:bg-gray-700"
+                }`}
+              >
+                <span className="text-gray-900 dark:text-white font-medium">Profile Information</span>
+              </button>
+              <button
+                onClick={() => setActiveTab("password")}
+                className={`w-full px-6 py-4 text-left transition-colors ${
+                  activeTab === "password"
+                    ? "bg-blue-50 dark:bg-blue-900/30 border-l-4 border-blue-600"
+                    : "hover:bg-gray-50 dark:hover:bg-gray-700"
+                }`}
+              >
+                <span className="text-gray-900 dark:text-white font-medium">Change Password</span>
+              </button>
+            </nav>
           </div>
         </div>
 
-        <div className="col-md-9">
+        {/* Main Content */}
+        <div className="lg:w-3/4">
           {activeTab === "profile" ? (
-            <div className="card mb-4">
-              <div className="card-body">
-                <h5 className="card-title">Profile Information</h5>
-                <form onSubmit={handleProfileSubmit}>
-                  <div className="form-group mb-3">
-                    <label htmlFor="name">Full Name</label>
-                    <input
-                      type="text"
-                      className={`form-control ${profileErrors.name ? "is-invalid" : ""}`}
-                      id="name"
-                      name="name"
-                      value={profileData.name}
-                      onChange={handleProfileChange}
-                    />
-                    {profileErrors.name && <div className="invalid-feedback">{profileErrors.name}</div>}
-                  </div>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Profile Information</h2>
+              <form onSubmit={handleProfileSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={profileData.name}
+                    onChange={handleProfileChange}
+                    className={`w-full px-4 py-2 rounded-lg border ${
+                      profileErrors.name ? "border-red-500" : "border-gray-300"
+                    } focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600`}
+                  />
+                  {profileErrors.name && <p className="mt-1 text-sm text-red-600">{profileErrors.name}</p>}
+                </div>
 
-                  <div className="form-group mb-3">
-                    <label htmlFor="email">Email Address</label>
-                    <input type="email" className="form-control" id="email" value={user.email} disabled />
-                    <small className="form-text text-muted">Email cannot be changed</small>
-                  </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={user.email}
+                    disabled
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 bg-gray-50 text-gray-500 dark:bg-gray-600 dark:border-gray-600"
+                  />
+                  <p className="mt-1 text-sm text-gray-500">Email cannot be changed</p>
+                </div>
 
-                  <div className="form-group mb-3">
-                    <label htmlFor="institution">Institution</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="institution"
-                      name="institution"
-                      value={profileData.institution}
-                      onChange={handleProfileChange}
-                      placeholder="Your school, university or organization"
-                    />
-                  </div>
+                <div>
+                  <label htmlFor="institution" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Institution
+                  </label>
+                  <input
+                    type="text"
+                    id="institution"
+                    name="institution"
+                    value={profileData.institution}
+                    onChange={handleProfileChange}
+                    placeholder="Your school, university or organization"
+                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600"
+                  />
+                </div>
 
-                  <div className="form-group mb-3">
-                    <label htmlFor="profilePicture">Profile Picture URL</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="profilePicture"
-                      name="profilePicture"
-                      value={profileData.profilePicture}
-                      onChange={handleProfileChange}
-                      placeholder="URL to your profile picture"
-                    />
-                  </div>
+                <div>
+  <label htmlFor="profilePicture" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+    Profile Picture
+  </label>
+  <div className="mt-1 flex items-center space-x-4">
+    <div className="flex-shrink-0">
+      {profileData.profilePicture ? (
+        <img
+          src={profileData.profilePicture}
+          alt={user.name}
+          className="h-16 w-16 rounded-full object-cover ring-2 ring-blue-500"
+          onError={(e) => {
+            e.target.onerror = null;
+            setProfileData(prev => ({ ...prev, profilePicture: "" }));
+          }}
+        />
+      ) : (
+        <div className={`h-16 w-16 rounded-full flex items-center justify-center text-xl font-bold text-white ${getAvatarBackground(user.name)}`}>
+          {getInitials(user.name)}
+        </div>
+      )}
+    </div>
+    <div className="flex-grow">
+      <input
+        type="text"
+        id="profilePicture"
+        name="profilePicture"
+        value={profileData.profilePicture}
+        onChange={handleProfileChange}
+        placeholder="Enter image URL or leave empty for initials avatar"
+        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600"
+        />
+    </div>
+    </div>
+        <p className="mt-2 text-sm text-gray-500">
+          Enter a valid image URL or leave empty to use your initials as avatar
+        </p>
+    </div>
 
-                  <button type="submit" className="btn btn-primary" disabled={updatingProfile}>
-                    {updatingProfile ? "Updating..." : "Update Profile"}
-                  </button>
-                </form>
-              </div>
+                <button
+                  type="submit"
+                  disabled={updatingProfile}
+                  className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 transition-colors disabled:opacity-50"
+                >
+                  {updatingProfile ? (
+                    <span className="flex items-center justify-center">
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      Updating...
+                    </span>
+                  ) : (
+                    "Update Profile"
+                  )}
+                </button>
+              </form>
             </div>
           ) : (
-            <div className="card mb-4">
-              <div className="card-body">
-                <h5 className="card-title">Change Password</h5>
-                <form onSubmit={handlePasswordSubmit}>
-                  <div className="form-group mb-3">
-                    <label htmlFor="currentPassword">Current Password</label>
-                    <input
-                      type="password"
-                      className={`form-control ${passwordErrors.currentPassword ? "is-invalid" : ""}`}
-                      id="currentPassword"
-                      name="currentPassword"
-                      value={passwordData.currentPassword}
-                      onChange={handlePasswordChange}
-                    />
-                    {passwordErrors.currentPassword && (
-                      <div className="invalid-feedback">{passwordErrors.currentPassword}</div>
-                    )}
-                  </div>
+            // Password form with similar styling
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Change Password</h2>
+              <form onSubmit={handlePasswordSubmit} className="space-y-6">
+  <div>
+    <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+      Current Password
+    </label>
+    <input
+      type="password"
+      id="currentPassword"
+      name="currentPassword"
+      value={passwordData.currentPassword}
+      onChange={handlePasswordChange}
+      className={`w-full px-4 py-2 rounded-lg border ${
+        passwordErrors.currentPassword ? "border-red-500" : "border-gray-300"
+      } focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600`}
+    />
+    {passwordErrors.currentPassword && (
+      <p className="mt-1 text-sm text-red-600">{passwordErrors.currentPassword}</p>
+    )}
+  </div>
 
-                  <div className="form-group mb-3">
-                    <label htmlFor="newPassword">New Password</label>
-                    <input
-                      type="password"
-                      className={`form-control ${passwordErrors.newPassword ? "is-invalid" : ""}`}
-                      id="newPassword"
-                      name="newPassword"
-                      value={passwordData.newPassword}
-                      onChange={handlePasswordChange}
-                    />
-                    {passwordErrors.newPassword && <div className="invalid-feedback">{passwordErrors.newPassword}</div>}
-                  </div>
+  <div>
+    <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+      New Password
+    </label>
+    <input
+      type="password"
+      id="newPassword"
+      name="newPassword"
+      value={passwordData.newPassword}
+      onChange={handlePasswordChange}
+      className={`w-full px-4 py-2 rounded-lg border ${
+        passwordErrors.newPassword ? "border-red-500" : "border-gray-300"
+      } focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600`}
+    />
+    {passwordErrors.newPassword && (
+      <p className="mt-1 text-sm text-red-600">{passwordErrors.newPassword}</p>
+    )}
+  </div>
 
-                  <div className="form-group mb-3">
-                    <label htmlFor="confirmPassword">Confirm New Password</label>
-                    <input
-                      type="password"
-                      className={`form-control ${passwordErrors.confirmPassword ? "is-invalid" : ""}`}
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      value={passwordData.confirmPassword}
-                      onChange={handlePasswordChange}
-                    />
-                    {passwordErrors.confirmPassword && (
-                      <div className="invalid-feedback">{passwordErrors.confirmPassword}</div>
-                    )}
-                  </div>
+  <div>
+    <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+      Confirm New Password
+    </label>
+    <input
+      type="password"
+      id="confirmPassword"
+      name="confirmPassword"
+      value={passwordData.confirmPassword}
+      onChange={handlePasswordChange}
+      className={`w-full px-4 py-2 rounded-lg border ${
+        passwordErrors.confirmPassword ? "border-red-500" : "border-gray-300"
+      } focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600`}
+    />
+    {passwordErrors.confirmPassword && (
+      <p className="mt-1 text-sm text-red-600">{passwordErrors.confirmPassword}</p>
+    )}
+  </div>
 
-                  <button type="submit" className="btn btn-primary" disabled={updatingPassword}>
-                    {updatingPassword ? "Updating..." : "Update Password"}
-                  </button>
-                </form>
-              </div>
+  <button
+    type="submit"
+    disabled={updatingPassword}
+    className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 transition-colors disabled:opacity-50"
+  >
+    {updatingPassword ? (
+      <span className="flex items-center justify-center">
+        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+        </svg>
+        Updating Password...
+      </span>
+    ) : (
+      "Update Password"
+    )}
+  </button>
+</form>
             </div>
           )}
         </div>
       </div>
     </div>
-  )
+  );
+
 }
 
 export default Profile
