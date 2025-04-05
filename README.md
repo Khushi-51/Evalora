@@ -21,14 +21,17 @@ A comprehensive platform for creating, managing, and taking online exams with ce
 - **Authentication**: JWT (JSON Web Tokens)
 - **Real-time**: Socket.io
 
-## Installation
+## Demo Accounts
 
-### Prerequisites
+### Admin
+- Email: admin@evalora.com
+- Password: admin@123
 
-- Node.js (v14 or higher)
-- MongoDB (local or Atlas)
+### Examiner
+- Email: examiner@evalora.com
+- Password: examiner@123
 
-### Setup
-
-1. Clone the repository:
+### Student
+- Email: student@evalora.com
+- Password: student@123
 
